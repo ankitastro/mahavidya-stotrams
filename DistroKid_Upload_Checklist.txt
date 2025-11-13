@@ -1,0 +1,418 @@
+================================================================================
+DASA MAHAVIDYA - DISTROKID UPLOAD CHECKLIST
+================================================================================
+
+PRE-UPLOAD CHECKLIST - DO YOU HAVE EVERYTHING?
+================================================================================
+
+☐ AUDIO FILES READY
+  - 10 .wav files (one for each Mahavidya)
+  - All files should be in the Mahavidya_Stotrams folder
+  - Decision made on which versions to use for duplicates:
+    ☐ Chinnamasta (4 versions available - choose 1)
+    ☐ Tripura Sundari (2 different versions - choose 1)
+    ☐ Kali (use full version or intro?)
+
+☐ ALBUM ARTWORK
+  - Square image: 3000x3000px minimum (4000x4000px preferred)
+  - Format: JPG or PNG, RGB color mode
+  - File size: Under 10MB
+  - NO text, logos, URLs, or prices on the image
+  - If you don't have this yet, STOP and create it first!
+
+☐ RELEASE DATE DECISION
+  - Immediate release? Or schedule for specific date?
+  - Recommendation: 2-4 weeks from upload for pre-release promotion
+
+☐ METADATA READY
+  - Album title: "Dasa Mahavidya: The Ten Great Wisdoms"
+  - Artist name: "Astrokiran"
+  - Label name: "Astrokiran" or "Independent"
+  - Genre: World Music / Devotional
+  - All track titles (see metadata JSON file)
+
+
+================================================================================
+STEP-BY-STEP DISTROKID UPLOAD GUIDE
+================================================================================
+
+STEP 1: LOG INTO DISTROKID
+--------------------------------------------------------------------------------
+1. Go to https://distrokid.com/
+2. Click "Sign In" (top right)
+3. Enter your credentials
+4. Click "Upload" button (big orange button)
+
+
+STEP 2: CHOOSE RELEASE TYPE
+--------------------------------------------------------------------------------
+1. Select "Album" (not Single or EP)
+2. Click "Continue"
+
+Note: An album is 7+ tracks OR over 30 minutes total. Your 10-track collection qualifies as an album.
+
+
+STEP 3: UPLOAD YOUR AUDIO FILES
+--------------------------------------------------------------------------------
+1. Click "Choose Files" or drag and drop
+2. Navigate to: /Users/ankitgupta/Downloads/Mahavidya_Stotrams/
+3. Select your 10 chosen .wav files
+4. Click "Upload"
+5. Wait for files to upload (may take several minutes for large files)
+6. Verify all 10 tracks appear in the correct order
+
+
+STEP 4: ALBUM INFORMATION
+--------------------------------------------------------------------------------
+
+Field: ALBUM TITLE
+Enter: Dasa Mahavidya: The Ten Great Wisdoms
+
+Field: PRIMARY ARTIST
+Enter: Astrokiran
+
+Field: LANGUAGE
+Select: Sanskrit
+
+Field: PRIMARY GENRE
+Select: World Music
+(If not available, choose: New Age or Alternative)
+
+Field: SECONDARY GENRE
+Select: Religious (if available) or Meditation
+
+Field: LABEL NAME
+Enter: Astrokiran
+(Or "Independent" if you prefer)
+
+Field: UPC/EAN
+Leave blank - DistroKid will auto-generate
+
+Field: COPYRIGHT
+Enter: 2025 Astrokiran
+(Year is the year of first publication)
+
+Field: RECORDING COPYRIGHT (℗)
+Enter: 2025 Astrokiran
+
+Field: RELEASE DATE
+Choose your target date (recommend 2-4 weeks out)
+Or select "Release as soon as possible"
+
+Field: PREVIOUSLY RELEASED?
+Select: No
+
+
+STEP 5: UPLOAD ALBUM ARTWORK
+--------------------------------------------------------------------------------
+1. Click "Upload Artwork"
+2. Select your 3000x3000px (or larger) album cover
+3. DistroKid will verify it meets requirements
+4. If rejected, check:
+   - Square aspect ratio (1:1)
+   - Minimum 3000x3000px
+   - No URLs, prices, or streaming logos
+   - RGB color mode (not CMYK)
+
+
+STEP 6: TRACK-BY-TRACK INFORMATION
+--------------------------------------------------------------------------------
+
+For EACH of the 10 tracks, you'll need to fill out:
+
+TRACK 1: KALI
+---
+Track Title: Mahakali Mantra for Protection & Transformation
+Explicit: No
+ISRC: Leave blank (DistroKid auto-generates)
+Featured Artists: [Leave blank unless you have collaborators]
+Songwriters: Traditional
+Composers: Traditional
+Producers: Astrokiran
+Language: Sanskrit
+
+TRACK 2: TARA
+---
+Track Title: Tara Mantra (Neel Saraswati) for Wisdom, Speech & Guidance
+Explicit: No
+ISRC: Leave blank
+Songwriters: Traditional
+Composers: Traditional
+Producers: Astrokiran
+Language: Sanskrit
+
+TRACK 3: TRIPURA SUNDARI
+---
+Track Title: Tripura Sundari Mantra (Shodashi) for Divine Beauty & Bliss
+Explicit: No
+ISRC: Leave blank
+Songwriters: Traditional
+Composers: Traditional
+Producers: Astrokiran
+Language: Sanskrit
+
+TRACK 4: BHUVANESHWARI
+---
+Track Title: Bhuvaneshwari Mantra (Hreem) - Goddess of Space & Consciousness
+Explicit: No
+ISRC: Leave blank
+Songwriters: Traditional
+Composers: Traditional
+Producers: Astrokiran
+Language: Sanskrit
+
+TRACK 5: CHINNAMASTA
+---
+Track Title: Chhinnamasta Mantra for Kundalini & Transcending Ego
+Explicit: No
+ISRC: Leave blank
+Songwriters: Traditional
+Composers: Traditional
+Producers: Astrokiran
+Language: Sanskrit
+
+TRACK 6: BHAIRAVI
+---
+Track Title: Bhairavi Mantra (Tripura Bhairavi) for Inner Fire & Transformation
+Explicit: No
+ISRC: Leave blank
+Songwriters: Traditional
+Composers: Traditional
+Producers: Astrokiran
+Language: Sanskrit
+
+TRACK 7: DHUMAVATI
+---
+Track Title: Dhumavati Mantra - Chant of the Void for Letting Go
+Explicit: No
+ISRC: Leave blank
+Songwriters: Traditional
+Composers: Traditional
+Producers: Astrokiran
+Language: Sanskrit
+
+TRACK 8: BAGALAMUKHI
+---
+Track Title: Bagalamukhi Mantra to Silence Enemies & Win Legal Battles
+Explicit: No
+ISRC: Leave blank
+Songwriters: Traditional
+Composers: Traditional
+Producers: Astrokiran
+Language: Sanskrit
+
+TRACK 9: MATANGI
+---
+Track Title: Matangi Mantra (Tantric Saraswati) for Speech, Music & Arts
+Explicit: No
+ISRC: Leave blank
+Songwriters: Traditional
+Composers: Traditional
+Producers: Astrokiran
+Language: Sanskrit
+
+TRACK 10: KAMALA
+---
+Track Title: Kamala Mantra (Tantric Lakshmi) for Wealth & Abundance
+Explicit: No
+ISRC: Leave blank
+Songwriters: Traditional
+Composers: Traditional
+Producers: Astrokiran
+Language: Sanskrit
+
+
+STEP 7: CHOOSE YOUR STORES/PLATFORMS
+--------------------------------------------------------------------------------
+
+DistroKid will show a list of stores. HIGHLY RECOMMENDED for your project:
+
+ESSENTIAL (Must Select):
+☑ Spotify
+☑ Apple Music / iTunes
+☑ YouTube Music
+☑ Amazon Music
+☑ Deezer
+☑ Tidal
+
+CRITICAL FOR INDIAN AUDIENCE:
+☑ JioSaavn (VERY IMPORTANT - largest in India)
+☑ Gaana (IMPORTANT - popular in India)
+☑ Wynk Music (Airtel platform in India)
+☑ Hungama (Indian platform)
+
+RECOMMENDED:
+☑ Pandora
+☑ iHeartRadio
+☑ SoundCloud
+☑ TikTok / Resso
+
+Note: You can select ALL stores - there's no extra cost with DistroKid!
+
+
+STEP 8: ADDITIONAL OPTIONS (Optional but Recommended)
+--------------------------------------------------------------------------------
+
+☐ LYRICS
+   - DistroKid allows you to submit lyrics
+   - For Sanskrit mantras, provide the Sanskrit text
+   - You can also add transliteration if desired
+   - This helps with discoverability on Apple Music & Spotify
+
+☐ YOUTUBE CONTENT ID
+   - Enable "Monetize YouTube videos"
+   - This protects your music and earns revenue from user-uploaded videos
+   - Recommended: YES (if you have DistroKid's YouTube Money add-on)
+
+☐ SOCIAL MEDIA LINKS
+   - Add link to astrokiran.com
+   - Add Instagram, Facebook if you have them
+   - These appear on your artist profile
+
+☐ PRE-SAVE/PRE-ADD
+   - If you scheduled a future release date
+   - Generates shareable links for fans to pre-save
+   - Great for building anticipation
+
+
+STEP 9: REVIEW & SUBMIT
+--------------------------------------------------------------------------------
+1. Review ALL information carefully
+2. Check track order is correct (1-10)
+3. Verify spelling of all track titles
+4. Verify album artwork looks correct
+5. Click "Submit Album"
+6. DistroKid will process (usually takes a few minutes)
+
+
+STEP 10: WHAT HAPPENS NEXT?
+--------------------------------------------------------------------------------
+
+IMMEDIATE (Within minutes):
+- DistroKid assigns UPC and ISRC codes
+- You'll receive confirmation email
+- Your release enters "processing" status
+
+WITHIN 1-3 DAYS:
+- DistroKid sends to all selected platforms
+- You can track status in your dashboard
+
+WITHIN 7-14 DAYS:
+- Most platforms go live (some faster, some slower)
+- YouTube Music: Usually 1-3 days
+- Spotify: Usually 3-7 days
+- Apple Music: Usually 3-7 days
+- JioSaavn/Gaana: Usually 7-14 days
+
+AFTER RELEASE:
+- You'll receive notification emails as each platform goes live
+- Check your DistroKid dashboard for store links
+- Start promoting with direct links to each platform
+
+
+================================================================================
+TIPS FOR SUCCESS
+================================================================================
+
+1. ALBUM ARTWORK IS CRITICAL
+   - Don't upload without proper artwork
+   - It represents your brand and affects discoverability
+   - Consider hiring a designer on Fiverr if needed
+
+2. TRACK TITLES MATTER FOR SEO
+   - Use the titles from the metadata JSON - they're SEO-optimized
+   - Include key terms like "Mantra," goddess names, and benefits
+   - Keep under 100 characters if possible
+
+3. RELEASE DATE STRATEGY
+   - If you have artwork ready: upload now, release in 2-3 weeks
+   - This gives time to:
+     * Set up pre-saves
+     * Build social media buzz
+     * Contact playlists curators
+     * Create promotional content
+
+4. AFTER UPLOAD - PROMOTION
+   - Create individual YouTube videos with visualizers
+   - Share on social media with links
+   - Submit to Spotify playlists (there are thousands of devotional playlists)
+   - Post on spiritual/yoga/meditation forums
+   - Email your website subscribers
+
+5. YOUTUBE STRATEGY
+   - Upload videos to your "Astrokiran" YouTube channel separately
+   - Use the descriptions from YouTube_Upload_Guide.txt
+   - Create a playlist linking all 10 videos
+   - YouTube Music will auto-generate from YouTube uploads
+   - But also submit via DistroKid for proper artist profile
+
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+PROBLEM: Artwork rejected
+SOLUTION: Check it's exactly square (1:1 ratio), RGB mode, no text/URLs
+
+PROBLEM: File upload fails
+SOLUTION: Ensure files are WAV or FLAC, not MP3. Check file isn't corrupted.
+
+PROBLEM: Don't have artwork yet
+SOLUTION: Use Canva (free) or hire on Fiverr ($5-20). Search "album cover design"
+
+PROBLEM: Unsure about track order
+SOLUTION: Use the 1-10 order from the metadata JSON (Kali first, Kamala last)
+
+PROBLEM: Title too long
+SOLUTION: DistroKid allows up to 200 characters, but some stores truncate at 100
+
+
+================================================================================
+QUESTIONS? NEED HELP?
+================================================================================
+
+DistroKid Support:
+- Help Center: https://distrokid.com/help/
+- Email: support@distrokid.com
+- Response time: Usually 24-48 hours
+
+Reference Files:
+- Metadata: dasa_mahavidya_metadata.json
+- YouTube Guide: YouTube_Upload_Guide.txt
+- Audio files: Mahavidya_Stotrams folder
+
+
+================================================================================
+AFTER YOUR ALBUM IS LIVE
+================================================================================
+
+1. CLAIM YOUR ARTIST PROFILES
+   - Spotify for Artists: https://artists.spotify.com/
+   - Apple Music for Artists: https://artists.apple.com/
+   - YouTube for Artists: https://artists.youtube.com/
+
+2. SUBMIT TO PLAYLISTS
+   - Search for "Sanskrit mantra" playlists on Spotify
+   - Search for "meditation music" playlists
+   - Contact curators (many have submission forms)
+
+3. TRACK YOUR STATS
+   - DistroKid dashboard shows streams by platform
+   - Claim artist profiles for detailed analytics
+   - Monitor which tracks perform best
+
+4. PROMOTE CONTINUOUSLY
+   - Share on astrokiran.com blog
+   - Create social media content
+   - Engage with spiritual/yoga communities
+   - Consider Instagram Reels with mantra clips
+
+5. CONSIDER FOLLOW-UP RELEASES
+   - Release alternate versions (Dark Power Chinnamasta, etc.) as singles
+   - Create remix albums
+   - Collaborate with other artists
+
+
+Good luck with your release! 🙏
+
+================================================================================

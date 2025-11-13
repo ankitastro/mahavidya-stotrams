@@ -1,0 +1,156 @@
+================================================================================
+DASA MAHAVIDYA - ARTWORK USAGE GUIDE
+================================================================================
+
+All individual goddess images have been converted to square format (3000x3000px)
+and are ready for use.
+
+Location: Mahavidya_Stotrams/Artwork/
+
+
+================================================================================
+ARTWORK MAPPING - WHICH IMAGE FOR WHICH TRACK
+================================================================================
+
+Track 01 - Kali Intro
+  File: Track_01_Kali_Intro.jpg
+
+Track 02 - Kali Main
+  File: Track_02_Kali_Main.jpg
+
+Track 03 - Tara
+  File: Track_03_Tara.jpg
+
+Track 04 & 05 - Tripura Sundari (both versions use same image)
+  File: Track_04_05_Tripura_Sundari.jpg
+
+Track 06 - Bhuvaneshwari
+  File: ⚠️  MISSING - Need to create or provide this image
+
+Track 07, 08, 15, 16 - Chinnamasta (all versions use same image)
+  File: Track_07_08_15_16_Chinnamasta.jpg
+  (Tracks: Cover, Remastered, DarkPower, DarkTechno)
+
+Track 09 - Bhairavi
+  File: Track_09_Bhairavi.jpg
+
+Track 10 & 11 - Dhumavati (both versions use same image)
+  File: Track_10_11_Dhumavati.jpg
+  (Tracks: Main, Alakshmi)
+
+Track 12 - Bagalamukhi
+  File: Track_12_Bagalamukhi.jpg
+
+Track 13 - Matangi
+  File: Track_13_Matangi.jpg
+
+Track 14 - Kamala
+  File: Track_14_Kamala.jpg
+
+
+================================================================================
+USAGE BY PLATFORM
+================================================================================
+
+FOR DISTROKID ALBUM UPLOAD:
+----------------------------
+Use: Album_Cover_Kali.jpg (already created)
+Location: Mahavidya_Stotrams/Album_Cover_Kali.jpg
+
+DistroKid only allows ONE album cover for the entire release.
+This will be used on Spotify, YouTube Music, Amazon Music, etc.
+
+
+FOR YOUTUBE VIDEOS (RECOMMENDED):
+----------------------------------
+Create individual YouTube videos for each track using their specific artwork:
+1. Use video editing software or online tools (Canva, Adobe Express)
+2. Create static video with:
+   - Track artwork as background
+   - Optional: Add track title text overlay
+   - Audio: Your .wav file
+3. Upload to YouTube with SEO descriptions from YouTube_Upload_Guide.txt
+
+Benefits:
+- Each goddess gets her own dedicated visual presence
+- Better SEO and discoverability
+- More engaging for viewers
+- Can create a visually stunning playlist
+
+
+FOR APPLE MUSIC (Advanced):
+----------------------------
+Apple Music supports track-specific artwork, but this requires:
+1. iTunes Producer software (Mac only)
+2. Manual upload to Apple Music for Artists
+3. Not available through DistroKid standard upload
+
+Alternative: Focus on YouTube for individual artwork showcase
+
+
+FOR SOCIAL MEDIA / PROMOTION:
+------------------------------
+Use individual track artwork for:
+- Instagram posts announcing each track
+- Facebook album posts
+- Website track listings
+- Playlist cover images
+- Promotional graphics
+
+
+================================================================================
+CREATING YOUTUBE VIDEOS - QUICK GUIDE
+================================================================================
+
+Option 1: Canva (Free/Easy)
+1. Go to canva.com
+2. Create "Video" → "YouTube Video" (1920x1080)
+3. Upload your track artwork
+4. Add text overlay with track title (optional)
+5. Download as MP4 (5 seconds duration is fine - it will loop)
+6. Use video editing software to combine with audio
+
+Option 2: FFmpeg (Command Line/Free)
+Run this command for each track:
+ffmpeg -loop 1 -i [artwork.jpg] -i [audio.wav] -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest [output.mp4]
+
+Example:
+ffmpeg -loop 1 -i Track_02_Kali_Main.jpg -i 02_Kali_Main.wav -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest Kali_Main_Video.mp4
+
+Option 3: Online Tools
+- Kapwing.com
+- Clideo.com
+- Adobe Express (free tier)
+
+
+================================================================================
+MISSING ARTWORK
+================================================================================
+
+⚠️  BHUVANESHWARI IMAGE MISSING
+
+Track 06 (Bhuvaneshwari) does not have artwork yet.
+
+Options:
+1. Create/commission Bhuvaneshwari artwork
+2. Use the album cover (Kali) as placeholder
+3. Use Dasha_Mahavidya.jpg (group image) as placeholder
+
+Let me know if you need help creating this image.
+
+
+================================================================================
+SUMMARY
+================================================================================
+
+✓ 10 goddess images converted to square (3000x3000px)
+✓ All images saved in: Mahavidya_Stotrams/Artwork/
+✓ Album cover ready: Album_Cover_Kali.jpg
+✗ 1 image missing: Bhuvaneshwari
+
+Ready for:
+✓ DistroKid album upload (use Album_Cover_Kali.jpg)
+✓ YouTube video creation (use individual track artwork)
+✓ Social media promotion
+
+================================================================================

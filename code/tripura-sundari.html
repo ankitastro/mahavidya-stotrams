@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tripura Sundari (Sri Yantra) Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+    <style>
+        body {
+            background-color: #050005;
+            background: radial-gradient(circle, #1a001a 0%, #000000 100%);
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+            font-family: 'Inter', sans-serif;
+        }
+        canvas {
+            box-shadow: 0 0 60px rgba(255, 20, 147, 0.15);
+        }
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            pointer-events: none;
+        }
+        .controls button {
+            pointer-events: auto;
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="yantraCanvas"></canvas>
+
+    <div class="controls">
+        <button onclick="toggleAnimation()" class="bg-pink-900 hover:bg-pink-700 text-pink-100 font-bold py-2 px-4 rounded border border-pink-500 shadow-[0_0_10px_rgba(255,20,147,0.5)] transition-all">
+            Toggle Pulse
+        </button>
+        
+        <button onclick="downloadHighResImage()" class="bg-yellow-900 hover:bg-yellow-700 text-yellow-100 font-bold py-2 px-4 rounded border border-yellow-500 shadow-[0_0_10px_rgba(255,215,0,0.5)] transition-all">
+            Download 4K Image
+        </button>
+
+        <button id="recordButton" onclick="recordGIF()" class="bg-purple-900 hover:bg-purple-700 text-purple-100 font-bold py-2 px-4 rounded border border-purple-500 shadow-[0_0_10px_rgba(147,112,219,0.5)] transition-all">
+            Record GIF (30s)
+        </button>
+    </div>
+
+<script>
+    const canvas = document.getElementById('yantraCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height, cx, cy;
+    let animationId;
+    let isAnimating = true;
+    let isRecording = false;
+
+    // Configuration for Sri Yantra (Neon Theme)
+    const config = {
+        bgGradientInner: '#1a001a',
+        bgGradientOuter: '#000000',
+        bhupuraColor: '#FFD700',   // Neon Gold
+        outerPetalColor: '#FF1493', // Neon Deep Pink (16 petals)
+        innerPetalColor: '#FF69B4', // Neon Hot Pink (8 petals)
+        triangleShaktiColor: '#FF1493', // Downward (Pink/Red)
+        triangleShivaColor: '#FFD700',  // Upward (Gold)
+        binduColor: '#FFFFFF',      // White
+        baseGlow: 15,
+        scale: 0.85
+    };
+
+    function resize() {
+        if (isRecording) return;
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        cx = width / 2;
+        cy = height / 2;
+        if (!isAnimating) {
+             const t = Date.now() / 30000; 
+             const p = t % 1;
+             calculateAndDraw(p);
+        }
+    }
+
+    window.addEventListener('resize', resize);
+
+    // --- Geometry Helpers ---
+
+    function getBhupuraPoints(size) {
+        const halfSize = size / 2;
+        const stemHalfWidth = size * 0.12;
+        const stemHeight = size * 0.06;
+        const capHalfWidth = size * 0.20;
+        const capHeight = size * 0.06;
+
+        const topSidePoints = [
+            { x: -halfSize, y: -halfSize },
+            { x: -stemHalfWidth, y: -halfSize },
+            { x: -stemHalfWidth, y: -halfSize - stemHeight },
+            { x: -capHalfWidth, y: -halfSize - stemHeight },
+            { x: -capHalfWidth, y: -halfSize - stemHeight - capHeight },
+            { x: capHalfWidth, y: -halfSize - stemHeight - capHeight },
+            { x: capHalfWidth, y: -halfSize - stemHeight },
+            { x: stemHalfWidth, y: -halfSize - stemHeight },
+            { x: stemHalfWidth, y: -halfSize },
+            { x: halfSize, y: -halfSize }
+        ];
+
+        const rotatePoint = (p) => ({ x: -p.y, y: p.x });
+        let allPoints = [];
+        allPoints = allPoints.concat(topSidePoints);
+        const rightSidePoints = topSidePoints.map(rotatePoint);
+        allPoints = allPoints.concat(rightSidePoints);
+        const bottomSidePoints = rightSidePoints.map(rotatePoint);
+        allPoints = allPoints.concat(bottomSidePoints);
+        const leftSidePoints = bottomSidePoints.map(rotatePoint);
+        allPoints = allPoints.concat(leftSidePoints);
+        return allPoints;
+    }
+
+    function drawBhupura(ctx, size) {
+        ctx.beginPath();
+        const points = getBhupuraPoints(size);
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) {
+            ctx.lineTo(points[i].x, points[i].y);
+        }
+        ctx.closePath();
+        ctx.stroke();
+    }
+
+    function drawPetal(ctx, r, w) {
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(w, -r/3, w, -r*0.9, 0, -r);
+        ctx.bezierCurveTo(-w, -r*0.9, -w, -r/3, 0, 0);
+        ctx.stroke();
+    }
+
+    // --- Sri Yantra Core Drawing Logic (Refined for Clarity) ---
+    function drawSriChakraCore(ctx, overallRadius) {
+        // Reduced thickness to prevent clutter (approx 1.2% of radius)
+        const triThickness = overallRadius * 0.012;
+
+        const R = overallRadius;
+        
+        // Tuned coordinates to open up the center (innermost triangles larger)
+        const triangles = [
+            // T1 (Shakti 1 - Largest Downward)
+            { pts: [[0, -0.9], [0.8, 0.65], [-0.8, 0.65]], color: config.triangleShaktiColor },
+            // T2 (Shiva 1 - Largest Upward)
+            { pts: [[0, 0.9], [0.8, -0.65], [-0.8, -0.65]], color: config.triangleShivaColor },
+            
+            // T3 (Shakti 2)
+            { pts: [[0, -0.7], [0.65, 0.5], [-0.65, 0.5]], color: config.triangleShaktiColor },
+            // T4 (Shiva 2)
+            { pts: [[0, 0.7], [0.65, -0.5], [-0.65, -0.5]], color: config.triangleShivaColor },
+            
+            // T5 (Shakti 3)
+            { pts: [[0, -0.5], [0.45, 0.35], [-0.45, 0.35]], color: config.triangleShaktiColor },
+            // T6 (Shiva 3)
+            { pts: [[0, 0.5], [0.45, -0.35], [-0.45, -0.35]], color: config.triangleShivaColor },
+            
+            // T7 (Shakti 4) - Adjusted to be slightly larger
+            { pts: [[0, -0.35], [0.3, 0.25], [-0.3, 0.25]], color: config.triangleShaktiColor },
+            // T8 (Shiva 4) - Adjusted to be slightly larger
+            { pts: [[0, 0.35], [0.3, -0.25], [-0.3, -0.25]], color: config.triangleShivaColor },
+            
+            // T9 (Shakti 5 - Innermost) - Significantly expanded to open the center
+            { pts: [[0, -0.22], [0.2, 0.15], [-0.2, 0.15]], color: config.triangleShaktiColor }
+        ];
+
+        triangles.forEach(t => {
+            ctx.beginPath();
+            ctx.strokeStyle = t.color;
+            ctx.lineWidth = triThickness;
+            
+            // Reduced blur for cleaner lines
+            ctx.shadowColor = t.color;
+            ctx.shadowBlur = 10; 
+            
+            const p1 = t.pts[0];
+            const p2 = t.pts[1];
+            const p3 = t.pts[2];
+            
+            ctx.moveTo(p1[0] * R, p1[1] * R);
+            ctx.lineTo(p2[0] * R, p2[1] * R);
+            ctx.lineTo(p3[0] * R, p3[1] * R);
+            ctx.closePath();
+            ctx.stroke();
+        });
+
+        // Central Bindu
+        ctx.beginPath();
+        ctx.arc(0, 0, R * 0.04, 0, Math.PI * 2); // Distinct Bindu
+        ctx.fillStyle = config.binduColor;
+        ctx.shadowColor = config.binduColor;
+        ctx.shadowBlur = 15;
+        ctx.fill();
+    }
+
+
+    // --- Main Draw Function ---
+
+    function draw(pulsePhase, petalRot16, petalRot8) {
+        // Clear background with radial gradient
+        const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(width, height));
+        gradient.addColorStop(0, config.bgGradientInner);
+        gradient.addColorStop(1, config.bgGradientOuter);
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const minDim = Math.min(canvas.width, canvas.height);
+        const yantraSize = minDim * config.scale;
+        
+        const resScale = minDim / 512; 
+
+        const sineWave = Math.sin(pulsePhase * Math.PI * 2 * 10); 
+        const glowStrength = (config.baseGlow + (sineWave * 5)) * resScale;
+        
+        ctx.translate(cx, cy);
+
+        // Bhupura
+        ctx.save();
+        const bhupuraScale = 1 + (sineWave * 0.01); 
+        ctx.scale(bhupuraScale, bhupuraScale);
+
+        ctx.shadowBlur = glowStrength * 1.5;
+        ctx.shadowColor = config.bhupuraColor;
+        ctx.strokeStyle = config.bhupuraColor;
+        
+        ctx.lineWidth = minDim * 0.012; 
+        drawBhupura(ctx, yantraSize); 
+        ctx.lineWidth = minDim * 0.003;
+        drawBhupura(ctx, yantraSize * 0.94); 
+        drawBhupura(ctx, yantraSize * 0.88); 
+        ctx.restore();
+
+        // 16-Petal Lotus
+        ctx.save();
+        const r16 = yantraSize * 0.45; 
+        const w16 = r16 * 0.25;        
+
+        ctx.shadowBlur = glowStrength * 0.8;
+        ctx.shadowColor = config.outerPetalColor;
+        ctx.strokeStyle = config.outerPetalColor;
+        ctx.lineWidth = minDim * 0.004;
+        
+        ctx.rotate(petalRot16); 
+        
+        ctx.beginPath();
+        ctx.arc(0, 0, r16, 0, Math.PI * 2);
+        ctx.stroke();
+
+        for (let i = 0; i < 16; i++) {
+            ctx.save();
+            ctx.rotate((i * Math.PI * 2) / 16);
+            ctx.translate(0, -r16 * 0.02); 
+            drawPetal(ctx, r16 * 0.98, w16);
+            ctx.restore();
+        }
+        ctx.restore();
+
+        // 8-Petal Lotus
+        ctx.save();
+        const r8 = r16 * 0.60; 
+        const w8 = r8 * 0.35; 
+        
+        ctx.shadowBlur = glowStrength * 1.0;
+        ctx.shadowColor = config.innerPetalColor;
+        ctx.strokeStyle = config.innerPetalColor;
+        ctx.lineWidth = minDim * 0.005;
+        
+        ctx.rotate(petalRot8); 
+
+        ctx.beginPath();
+        ctx.arc(0, 0, r8, 0, Math.PI * 2);
+        ctx.stroke();
+
+        for (let i = 0; i < 8; i++) {
+            ctx.save();
+            ctx.rotate((i * Math.PI * 2) / 8);
+            ctx.translate(0, -r8 * 0.02);
+            drawPetal(ctx, r8 * 0.98, w8);
+            ctx.restore();
+        }
+        ctx.restore();
+
+        // SRI CHAKRA
+        ctx.save();
+        const chakraScale = 1 + (sineWave * 0.015); 
+        ctx.scale(chakraScale, chakraScale);
+        
+        const sriChakraRadius = r8 * 0.9; 
+        
+        drawSriChakraCore(ctx, sriChakraRadius);
+        
+        ctx.restore();
+
+        ctx.translate(-cx, -cy);
+    }
+
+
+    function calculateAndDraw(progress) {
+        const pulsePhase = progress;
+        const petalRot16 = progress * (Math.PI / 8); 
+        const petalRot8 = -progress * (Math.PI / 4); 
+
+        draw(pulsePhase, petalRot16, petalRot8);
+    }
+
+    function animate() {
+        if (isRecording) return;
+        if (isAnimating) {
+            const period = 30000; 
+            const t = Date.now() % period;
+            const progress = t / period;
+            calculateAndDraw(progress);
+        }
+        animationId = requestAnimationFrame(animate);
+    }
+
+    function toggleAnimation() {
+        isAnimating = !isAnimating;
+    }
+
+    async function getWorkerBlob() {
+        try {
+            const response = await fetch('https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const blob = await response.blob();
+            return URL.createObjectURL(blob);
+        } catch (e) {
+            console.error("Could not load worker script:", e);
+            alert("Error loading GIF worker script.");
+            return null;
+        }
+    }
+
+    function downloadHighResImage() {
+        const oldWidth = canvas.width;
+        const oldHeight = canvas.height;
+        const oldCx = cx;
+        const oldCy = cy;
+
+        const RES = 3000;
+        canvas.width = RES;
+        canvas.height = RES;
+        cx = RES / 2;
+        cy = RES / 2;
+
+        calculateAndDraw(0.1); 
+
+        const link = document.createElement('a');
+        link.download = 'tripura_sundari_sri_yantra_4k.png'; 
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+
+        canvas.width = oldWidth;
+        canvas.height = oldHeight;
+        cx = oldCx;
+        cy = oldCy;
+        
+        if(!isAnimating) {
+             calculateAndDraw(Date.now() / 30000 % 1);
+        }
+    }
+
+    async function recordGIF() {
+        if (isRecording) return;
+        
+        const recordButton = document.getElementById('recordButton');
+        const originalText = recordButton.textContent;
+        
+        recordButton.disabled = true;
+        recordButton.textContent = 'Loading...';
+
+        const workerScript = await getWorkerBlob();
+        if (!workerScript) {
+            recordButton.disabled = false;
+            recordButton.textContent = originalText;
+            return;
+        }
+
+        isRecording = true;
+        cancelAnimationFrame(animationId);
+
+        recordButton.textContent = 'Recording (30s)...';
+
+        const SIZE = 720; 
+
+        const gif = new GIF({
+            workers: 2,
+            quality: 10,
+            width: SIZE,
+            height: SIZE,
+            workerScript: workerScript
+        });
+
+        const oldWidth = canvas.width;
+        const oldHeight = canvas.height;
+        const oldCx = cx;
+        const oldCy = cy;
+
+        canvas.width = SIZE;
+        canvas.height = SIZE;
+        cx = SIZE / 2;
+        cy = SIZE / 2;
+
+        const duration = 30000; 
+        const frameDelay = 66; 
+        const totalFrames = Math.floor(duration / frameDelay);
+
+        for (let i = 0; i < totalFrames; i++) {
+            const progress = i / totalFrames;
+            calculateAndDraw(progress);
+            gif.addFrame(ctx, {copy: true, delay: frameDelay});
+        }
+
+        recordButton.textContent = 'Rendering 0%...';
+        
+        gif.on('progress', function(p) {
+             recordButton.textContent = `Rendering ${Math.round(p * 100)}%...`;
+        });
+        
+        gif.on('finished', function(blob) {
+            canvas.width = oldWidth;
+            canvas.height = oldHeight;
+            cx = oldCx;
+            cy = oldCy;
+            
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'tripura_sundari_sri_yantra_loop_hd.gif'; 
+            a.click();
+            URL.revokeObjectURL(url);
+
+            isRecording = false;
+            recordButton.disabled = false;
+            recordButton.textContent = originalText;
+            animate(); 
+        });
+
+        gif.render();
+    }
+
+    resize();
+    animate();
+
+</script>
+</body>
+</html>

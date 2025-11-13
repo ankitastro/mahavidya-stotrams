@@ -1,0 +1,39 @@
+# Audio files (songs)
+*.wav
+*.mp3
+*.flac
+
+# Video files
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Videos directory
+videos/*.mp4
+
+# Yantra GIF files (keep only Kali yantra)
+code/yantras/*.gif
+!code/yantras/kali_yantra_loop_hd.gif
+
+# Node modules
+node_modules/
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Claude Code
+.claude/

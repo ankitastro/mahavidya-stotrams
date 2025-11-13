@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhuvaneshvari Yantra Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+    <style>
+        body {
+            /* Deep Space Background */
+            background-color: #050200; 
+            background: radial-gradient(circle, #1a0500 0%, #000000 100%);
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+            font-family: 'Inter', sans-serif;
+        }
+        canvas {
+            box-shadow: 0 0 60px rgba(255, 69, 0, 0.15);
+        }
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            pointer-events: none;
+        }
+        .controls button {
+            pointer-events: auto;
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="yantraCanvas"></canvas>
+
+    <div class="controls">
+        <button onclick="toggleAnimation()" class="bg-orange-900 hover:bg-orange-700 text-orange-100 font-bold py-2 px-4 rounded border border-orange-500 shadow-[0_0_10px_rgba(255,69,0,0.5)] transition-all">
+            Toggle Pulse
+        </button>
+        
+        <button onclick="downloadHighResImage()" class="bg-cyan-900 hover:bg-cyan-700 text-cyan-100 font-bold py-2 px-4 rounded border border-cyan-500 shadow-[0_0_10px_rgba(0,255,255,0.5)] transition-all">
+            Download 4K Image
+        </button>
+
+        <button id="recordButton" onclick="recordGIF()" class="bg-pink-900 hover:bg-pink-700 text-pink-100 font-bold py-2 px-4 rounded border border-pink-500 shadow-[0_0_10px_rgba(255,20,147,0.5)] transition-all">
+            Record GIF (30s)
+        </button>
+    </div>
+
+<script>
+    const canvas = document.getElementById('yantraCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height, cx, cy;
+    let animationId;
+    let isAnimating = true;
+    let isRecording = false;
+
+    // Configuration for Bhuvaneshvari Yantra (Neon Theme)
+    const config = {
+        bgGradientInner: '#1a0500', 
+        bgGradientOuter: '#000000',
+        bhupuraColor: '#FF4500',   // Neon Orange Red
+        petalColor: '#FF1493',     // Neon Deep Pink
+        circleColor: '#FFD700',    // Neon Gold
+        triangleUpColor: '#00FFFF', // Neon Cyan (Space)
+        triangleDownColor: '#00FFFF', // Neon Cyan
+        binduColor: '#FFFFFF',     // White
+        baseGlow: 15,
+        scale: 0.8
+    };
+
+    function resize() {
+        if (isRecording) return;
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        cx = width / 2;
+        cy = height / 2;
+        if (!isAnimating) {
+             const t = Date.now() / 30000; 
+             const p = t % 1;
+             calculateAndDraw(p);
+        }
+    }
+
+    window.addEventListener('resize', resize);
+
+    // --- Geometry Helpers ---
+
+    function getBhupuraPoints(size) {
+        const halfSize = size / 2;
+        const stemHalfWidth = size * 0.12;
+        const stemHeight = size * 0.06;
+        const capHalfWidth = size * 0.20;
+        const capHeight = size * 0.06;
+
+        const topSidePoints = [
+            { x: -halfSize, y: -halfSize },
+            { x: -stemHalfWidth, y: -halfSize },
+            { x: -stemHalfWidth, y: -halfSize - stemHeight },
+            { x: -capHalfWidth, y: -halfSize - stemHeight },
+            { x: -capHalfWidth, y: -halfSize - stemHeight - capHeight },
+            { x: capHalfWidth, y: -halfSize - stemHeight - capHeight },
+            { x: capHalfWidth, y: -halfSize - stemHeight },
+            { x: stemHalfWidth, y: -halfSize - stemHeight },
+            { x: stemHalfWidth, y: -halfSize },
+            { x: halfSize, y: -halfSize }
+        ];
+
+        const rotatePoint = (p) => ({ x: -p.y, y: p.x });
+        let allPoints = [];
+        allPoints = allPoints.concat(topSidePoints);
+        const rightSidePoints = topSidePoints.map(rotatePoint);
+        allPoints = allPoints.concat(rightSidePoints);
+        const bottomSidePoints = rightSidePoints.map(rotatePoint);
+        allPoints = allPoints.concat(bottomSidePoints);
+        const leftSidePoints = bottomSidePoints.map(rotatePoint);
+        allPoints = allPoints.concat(leftSidePoints);
+        return allPoints;
+    }
+
+    function drawBhupura(ctx, size) {
+        ctx.beginPath();
+        const points = getBhupuraPoints(size);
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) {
+            ctx.lineTo(points[i].x, points[i].y);
+        }
+        ctx.closePath();
+        ctx.stroke();
+    }
+
+    function drawPetal(ctx, r, w) {
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(w, -r/3, w, -r*0.8, 0, -r);
+        ctx.bezierCurveTo(-w, -r*0.8, -w, -r/3, 0, 0);
+        // Subtle fill for neon effect
+        ctx.fillStyle = config.petalColor + '10'; 
+        ctx.fill();
+        ctx.stroke();
+    }
+
+    function drawTriangle(ctx, r, inverted = false) {
+        ctx.beginPath();
+        const dir = inverted ? 1 : -1;
+        const startAngle = inverted ? (Math.PI / 2) : (-Math.PI / 2);
+        for (let i = 0; i < 3; i++) {
+            const angle = startAngle + (i * 2 * Math.PI / 3);
+            const x = r * Math.cos(angle);
+            const y = r * Math.sin(angle); 
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.stroke();
+    }
+
+    // --- Main Draw Function ---
+
+    function draw(pulsePhase, petalRot, starRot) {
+        // Background
+        const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(width, height));
+        gradient.addColorStop(0, config.bgGradientInner);
+        gradient.addColorStop(1, config.bgGradientOuter);
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const minDim = Math.min(canvas.width, canvas.height);
+        const size = minDim * config.scale;
+        const bhupuraSize = size * 0.9;
+        
+        const resScale = minDim / 512; 
+
+        const sineWave = Math.sin(pulsePhase * Math.PI * 2 * 10); 
+        const glowStrength = (config.baseGlow + (sineWave * 5)) * resScale;
+        
+        ctx.translate(cx, cy);
+
+        // 1. BHUPURA (Neon Orange)
+        ctx.save();
+        const bhupuraScale = 1 + (sineWave * 0.015); 
+        ctx.scale(bhupuraScale, bhupuraScale);
+
+        ctx.strokeStyle = config.bhupuraColor;
+        ctx.lineWidth = minDim * 0.008; 
+        ctx.lineCap = 'square';
+        ctx.lineJoin = 'miter';
+        ctx.miterLimit = 4; 
+        ctx.shadowBlur = glowStrength * 1.5;
+        ctx.shadowColor = config.bhupuraColor;
+        
+        drawBhupura(ctx, bhupuraSize);
+        ctx.stroke();
+        
+        ctx.lineWidth = minDim * 0.002;
+        ctx.shadowBlur = glowStrength * 0.5;
+        drawBhupura(ctx, bhupuraSize * 0.93); 
+        ctx.stroke();
+        ctx.restore();
+
+        // 2. LOTUS (8 Petals - Neon Pink)
+        const baseOuterRadius = bhupuraSize * 0.45;
+        const petalRadius = baseOuterRadius;
+        const petalWidth = petalRadius * 0.4;
+        
+        ctx.shadowBlur = glowStrength * 0.8;
+        ctx.shadowColor = config.petalColor;
+        
+        ctx.save();
+        ctx.rotate(petalRot); // Rotate petals slowly
+
+        for (let i = 0; i < 8; i++) {
+            ctx.save();
+            ctx.rotate((i * Math.PI / 4));
+            ctx.translate(0, -baseOuterRadius * 0.1);
+            
+            ctx.lineWidth = minDim * 0.005;
+            ctx.strokeStyle = config.petalColor;
+            
+            drawPetal(ctx, petalRadius, petalWidth);
+            ctx.restore();
+        }
+        ctx.restore(); 
+
+        // 3. INNER CIRCLE (Neon Gold)
+        const circleRadius = baseOuterRadius * 0.7;
+        ctx.strokeStyle = config.circleColor;
+        ctx.lineWidth = minDim * 0.006;
+        ctx.shadowColor = config.circleColor;
+        ctx.shadowBlur = glowStrength * 1.2;
+        
+        ctx.beginPath();
+        ctx.arc(0, 0, circleRadius, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // 4. SHATKONA (Star - Neon Cyan)
+        const starRadius = circleRadius * 0.85;
+        const bounce = 1 + sineWave * 0.02;
+        
+        ctx.save();
+        ctx.scale(bounce, bounce);
+        ctx.lineWidth = minDim * 0.008;
+        
+        // Triangle 1 (Pointing Up - Shiva)
+        ctx.save();
+        ctx.rotate(starRot); // Rotate Clockwise
+        ctx.strokeStyle = config.triangleUpColor;
+        ctx.shadowColor = config.triangleUpColor;
+        ctx.shadowBlur = glowStrength * 1.5;
+        drawTriangle(ctx, starRadius, false); // false = pointing up (standard angle logic depends on draw func)
+        // Actually my drawTriangle logic: i=0 is at -PI/2 (top) for inverted=false.
+        // Standard "Up" triangle has point at top.
+        ctx.restore();
+
+        // Triangle 2 (Pointing Down - Shakti)
+        ctx.save();
+        ctx.rotate(-starRot); // Rotate Counter-Clockwise
+        ctx.strokeStyle = config.triangleDownColor;
+        ctx.shadowColor = config.triangleDownColor;
+        ctx.shadowBlur = glowStrength * 1.5;
+        drawTriangle(ctx, starRadius, true); // true = pointing down
+        ctx.restore();
+
+        ctx.restore();
+
+        // 5. BINDU (White Dot)
+        ctx.beginPath();
+        ctx.arc(0, 0, minDim * 0.012, 0, Math.PI * 2);
+        ctx.fillStyle = config.binduColor;
+        ctx.shadowColor = config.binduColor;
+        ctx.shadowBlur = glowStrength * 2.0;
+        ctx.fill();
+
+        ctx.translate(-cx, -cy);
+    }
+
+    function calculateAndDraw(progress) {
+        const pulsePhase = progress;
+        // Petals rotate 1/8th (45deg) per loop
+        const petalRot = progress * (Math.PI / 4); 
+        // Star rotates 1/3rd (120deg) per loop for symmetry
+        const starRot = progress * (2 * Math.PI / 3); 
+
+        draw(pulsePhase, petalRot, starRot);
+    }
+
+    function animate() {
+        if (isRecording) return;
+        if (isAnimating) {
+            const period = 30000; 
+            const t = Date.now() % period;
+            const progress = t / period;
+            calculateAndDraw(progress);
+        }
+        animationId = requestAnimationFrame(animate);
+    }
+
+    function toggleAnimation() {
+        isAnimating = !isAnimating;
+    }
+
+    async function getWorkerBlob() {
+        try {
+            const response = await fetch('https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const blob = await response.blob();
+            return URL.createObjectURL(blob);
+        } catch (e) {
+            console.error("Could not load worker script:", e);
+            alert("Error loading GIF worker script.");
+            return null;
+        }
+    }
+
+    function downloadHighResImage() {
+        const oldWidth = canvas.width;
+        const oldHeight = canvas.height;
+        const oldCx = cx;
+        const oldCy = cy;
+
+        const RES = 3000;
+        canvas.width = RES;
+        canvas.height = RES;
+        cx = RES / 2;
+        cy = RES / 2;
+
+        calculateAndDraw(0.1); 
+
+        const link = document.createElement('a');
+        link.download = 'bhuvaneshvari_yantra_4k.png'; 
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+
+        canvas.width = oldWidth;
+        canvas.height = oldHeight;
+        cx = oldCx;
+        cy = oldCy;
+        
+        if(!isAnimating) {
+             calculateAndDraw(Date.now() / 30000 % 1);
+        }
+    }
+
+    async function recordGIF() {
+        if (isRecording) return;
+        
+        const recordButton = document.getElementById('recordButton');
+        const originalText = recordButton.textContent;
+        
+        recordButton.disabled = true;
+        recordButton.textContent = 'Loading...';
+
+        const workerScript = await getWorkerBlob();
+        if (!workerScript) {
+            recordButton.disabled = false;
+            recordButton.textContent = originalText;
+            return;
+        }
+
+        isRecording = true;
+        cancelAnimationFrame(animationId);
+
+        recordButton.textContent = 'Recording (30s)...';
+
+        const SIZE = 720; 
+
+        const gif = new GIF({
+            workers: 2,
+            quality: 10,
+            width: SIZE,
+            height: SIZE,
+            workerScript: workerScript
+        });
+
+        const oldWidth = canvas.width;
+        const oldHeight = canvas.height;
+        const oldCx = cx;
+        const oldCy = cy;
+
+        canvas.width = SIZE;
+        canvas.height = SIZE;
+        cx = SIZE / 2;
+        cy = SIZE / 2;
+
+        const duration = 30000; 
+        const frameDelay = 66; 
+        const totalFrames = Math.floor(duration / frameDelay);
+
+        for (let i = 0; i < totalFrames; i++) {
+            const progress = i / totalFrames;
+            calculateAndDraw(progress);
+            gif.addFrame(ctx, {copy: true, delay: frameDelay});
+        }
+
+        recordButton.textContent = 'Rendering 0%...';
+        
+        gif.on('progress', function(p) {
+             recordButton.textContent = `Rendering ${Math.round(p * 100)}%...`;
+        });
+        
+        gif.on('finished', function(blob) {
+            canvas.width = oldWidth;
+            canvas.height = oldHeight;
+            cx = oldCx;
+            cy = oldCy;
+            
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'bhuvaneshvari_yantra_loop_hd.gif'; 
+            a.click();
+            URL.revokeObjectURL(url);
+
+            isRecording = false;
+            recordButton.disabled = false;
+            recordButton.textContent = originalText;
+            animate(); 
+        });
+
+        gif.render();
+    }
+
+    resize();
+    animate();
+
+</script>
+</body>
+</html>
